@@ -89,7 +89,7 @@ func TestRemoveImagesFromAllNodes(t *testing.T) {
 				t.Error("Failed to deploy image list config", err)
 			}
 
-			ctxT, cancel := context.WithTimeout(ctx, time.Minute)
+			ctxT, cancel := context.WithTimeout(ctx, 5*time.Minute)
 			defer cancel()
 			checkImageRemoved(ctxT, t, getClusterNodes(t), nginx)
 
@@ -109,7 +109,7 @@ func TestRemoveImagesFromAllNodes(t *testing.T) {
 				t.Errorf("could not list pods: %v", err)
 			}
 
-			err = wait.For(conditions.New(c.Resources()).ResourcesDeleted(&ls), wait.WithTimeout(time.Minute))
+			err = wait.For(conditions.New(c.Resources()).ResourcesDeleted(&ls), wait.WithTimeout(5*time.Minute))
 			if err != nil {
 				t.Errorf("error waiting for pods to be deleted: %v", err)
 			}
@@ -162,7 +162,7 @@ func TestRemoveImagesFromAllNodes(t *testing.T) {
 			}
 
 			if err = wait.For(conditions.New(client.Resources()).DeploymentConditionMatch(&nginxDep, appsv1.DeploymentAvailable, corev1.ConditionTrue),
-				wait.WithTimeout(time.Minute*1)); err != nil {
+				wait.WithTimeout(time.Minute*5)); err != nil {
 				t.Fatal("nginx deployment not found", err)
 			}
 			ctx = context.WithValue(ctx, nginx, &nginxDep)
@@ -171,7 +171,7 @@ func TestRemoveImagesFromAllNodes(t *testing.T) {
 				ObjectMeta: metav1.ObjectMeta{Name: redis, Namespace: cfg.Namespace()},
 			}
 			if err = wait.For(conditions.New(client.Resources()).DeploymentConditionMatch(&redisDep, appsv1.DeploymentAvailable, corev1.ConditionTrue),
-				wait.WithTimeout(time.Minute*1)); err != nil {
+				wait.WithTimeout(time.Minute*5)); err != nil {
 				t.Fatal("redis deployment not found", err)
 			}
 			ctx = context.WithValue(ctx, redis, &redisDep)
@@ -180,7 +180,7 @@ func TestRemoveImagesFromAllNodes(t *testing.T) {
 				ObjectMeta: metav1.ObjectMeta{Name: caddy, Namespace: cfg.Namespace()},
 			}
 			if err = wait.For(conditions.New(client.Resources()).DeploymentConditionMatch(&caddyDep, appsv1.DeploymentAvailable, corev1.ConditionTrue),
-				wait.WithTimeout(time.Minute*1)); err != nil {
+				wait.WithTimeout(time.Minute*5)); err != nil {
 				t.Fatal("caddy deployment not found", err)
 			}
 			ctx = context.WithValue(ctx, caddy, &caddyDep)
@@ -220,7 +220,7 @@ func TestRemoveImagesFromAllNodes(t *testing.T) {
 			}
 
 			for _, nodeName := range getClusterNodes(t) {
-				err := wait.For(containerNotPresentOnNode(nodeName, redis), wait.WithTimeout(time.Minute*2))
+				err := wait.For(containerNotPresentOnNode(nodeName, redis), wait.WithTimeout(time.Minute*5))
 				if err != nil {
 					// Let's not mark this as an error
 					// We only have this to prevent race conditions with the eraser spinning up
@@ -228,7 +228,7 @@ func TestRemoveImagesFromAllNodes(t *testing.T) {
 				}
 			}
 			for _, nodeName := range getClusterNodes(t) {
-				err := wait.For(containerNotPresentOnNode(nodeName, caddy), wait.WithTimeout(time.Minute*2))
+				err := wait.For(containerNotPresentOnNode(nodeName, caddy), wait.WithTimeout(time.Minute*5))
 				if err != nil {
 					// Let's not mark this as an error
 					// We only have this to prevent race conditions with the eraser spinning up
@@ -256,7 +256,7 @@ func TestRemoveImagesFromAllNodes(t *testing.T) {
 			defer cancel()
 			checkImageRemoved(ctxT, t, getClusterNodes(t), redis)
 
-			ctxT, cancel = context.WithTimeout(ctx, time.Minute)
+			ctxT, cancel = context.WithTimeout(ctx, 5*time.Minute)
 			defer cancel()
 			checkImageRemoved(ctxT, t, getClusterNodes(t), caddy)
 
