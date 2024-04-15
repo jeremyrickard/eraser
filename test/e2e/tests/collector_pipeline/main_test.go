@@ -46,7 +46,7 @@ func TestMain(m *testing.M) {
 			"COLLECTOR_TAG":      collector.Tag,
 		}),
 	).Finish(
-		envfuncs.DestroyKindCluster(util.KindClusterName),
+	//envfuncs.DestroyKindCluster(util.KindClusterName),
 	)
 	os.Exit(util.Testenv.Run(m))
 }

@@ -48,11 +48,15 @@ func main() {
 		os.Exit(1)
 	}
 
+	log.Info("collector version", "collector version", "hello")
+
 	client, err := cri.NewCollectorClient(util.CRIPath)
 	if err != nil {
 		log.Error(err, "failed to get image client")
 		os.Exit(1)
 	}
+
+	log.Info("collector version", "collector version", "created cri client")
 
 	excluded, err = util.ParseExcluded()
 	if os.IsNotExist(err) {
